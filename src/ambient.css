@@ -37,8 +37,20 @@
 }
 .ambient-lightning {
   z-index: 5; opacity: 0;
-  background: radial-gradient(ellipse at 23% 29%, rgba(186,181,255,.65), rgba(108,133,224,.12) 9%, transparent 21%);
-  animation: cloud-lightning 59s linear infinite;
+  background: radial-gradient(ellipse at 23% 29%, rgba(186,181,255,.52), rgba(108,133,224,.10) 9%, transparent 21%);
+  animation: cloud-lightning 143s linear infinite;
+}
+.ambient-lightning::before, .ambient-lightning::after {
+  position: absolute; content: ''; display: block; background: rgba(224,235,255,.78);
+  filter: drop-shadow(0 0 7px rgba(167,192,255,.62));
+}
+.ambient-lightning::before {
+  top: 7%; left: 21.5%; width: 4.5%; height: 31%;
+  clip-path: polygon(45% 0, 72% 0, 53% 34%, 83% 34%, 23% 100%, 41% 52%, 14% 52%);
+}
+.ambient-lightning::after {
+  top: 25%; left: 24.5%; width: 5%; height: 19%; opacity: .7;
+  clip-path: polygon(0 0, 23% 0, 49% 40%, 100% 54%, 48% 61%, 35% 100%, 27% 61%, 13% 45%);
 }
 .meteor-field { z-index: 6; inset: 0; overflow: clip; }
 .meteor {
@@ -47,8 +59,8 @@
   border-radius: 100%; transform-origin: right center;
 }
 .meteor::after { content: ''; position: absolute; right: 0; top: -1px; width: 4px; height: 4px; border-radius: 50%; background: #edf9ff; box-shadow: 0 0 8px #b6dcff; }
-.meteor-one { top: 16%; left: 38%; animation: shooting-star 47s linear infinite; }
-.meteor-two { top: 62%; left: 9%; width: 110px; animation: shooting-star 71s 19s linear infinite; }
+.meteor-one { top: 16%; left: 38%; animation: shooting-star 128s -18s linear infinite; }
+.meteor-two { top: 62%; left: 9%; width: 110px; animation: shooting-star 197s 40s linear infinite; }
 
 /* Long density cycle: open Milky Way → cloud banks → open Milky Way. */
 @keyframes open-sky-drift {
@@ -69,10 +81,12 @@
 @keyframes stars-travel { from { transform: translate3d(-2%, 1%, 0); } to { transform: translate3d(3%, -2%, 0); } }
 @keyframes dust-tone-shift { from { opacity: .035; transform: scale(1.05) translateX(-4%); } to { opacity: .12; transform: scale(1.14) translateX(4%); } }
 @keyframes cloud-lightning {
-  0%, 18%, 19.4%, 100% { opacity: 0; }
-  18.2% { opacity: .64; }
-  18.55% { opacity: .08; }
-  18.85% { opacity: .4; }
+  0%, 47%, 48.7%, 100% { opacity: 0; }
+  47.15% { opacity: .26; }
+  47.28% { opacity: .72; }
+  47.46% { opacity: .07; }
+  47.72% { opacity: .46; }
+  48.02% { opacity: .12; }
 }
 @keyframes shooting-star {
   0%, 25% { opacity: 0; transform: translate3d(-70px, -35px, 0) rotate(28deg) scaleX(.3); }
