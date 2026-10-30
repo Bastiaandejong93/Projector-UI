@@ -1,0 +1,100 @@
+/* Realistic deep-space scene: movement comes from layered panning and density shifts. */
+.ambient-scene {
+  position: absolute; z-index: -2; inset: -3%; pointer-events: none;
+  transform: translate3d(var(--scene-x, 0%), 0, 0) scale(1.025);
+  transition: transform 850ms cubic-bezier(.22,.61,.36,1);
+}
+.has-panel .ambient-scene { transform: translate3d(var(--scene-x, 0%), 0, 0) scale(1.09); }
+.ambient { position: absolute; inset: -12%; pointer-events: none; }
+.ambient-clouds { background-position: center; background-size: cover; will-change: transform, opacity; }
+.ambient-far {
+  z-index: 1; opacity: .66;
+  background-image: linear-gradient(rgba(4, 10, 17, .22), rgba(4, 10, 17, .22)), url('/assets/backgrounds/luna-milky-way-v1.png');
+  animation: open-sky-drift 40s ease-in-out infinite alternate, open-sky-density 105s ease-in-out infinite;
+}
+.ambient-near {
+  z-index: 2; opacity: .42;
+  background-image: linear-gradient(rgba(13, 23, 35, .48), rgba(13, 23, 35, .48)), url('/assets/backgrounds/luna-cloudscape-v3.png');
+  background-blend-mode: color;
+  animation: cloud-surge 29s ease-in-out infinite alternate, cloud-density 105s ease-in-out infinite;
+}
+.ambient-dust {
+  z-index: 3; opacity: .08;
+  background-image: linear-gradient(135deg, rgba(67, 73, 92, .28), rgba(91, 79, 97, .18)), url('/assets/backgrounds/luna-cloudscape-v2.png');
+  background-position: 65% 40%; background-blend-mode: color;
+  animation: dust-drift 52s ease-in-out infinite alternate, dust-density 105s ease-in-out infinite;
+}
+.ambient-stars {
+  z-index: 0; opacity: .65;
+  background-image: radial-gradient(circle at 11% 28%, #b3cadb 0 1px, transparent 1.4px), radial-gradient(circle at 41% 12%, #b6a5cd 0 .8px, transparent 1.3px), radial-gradient(circle at 73% 30%, #b5cfde 0 1px, transparent 1.4px), radial-gradient(circle at 86% 61%, #d2bf9e 0 .8px, transparent 1.3px);
+  background-size: 270px 245px, 330px 290px, 420px 360px, 570px 430px;
+  animation: stars-travel 70s linear infinite alternate;
+}
+.ambient-tint {
+  z-index: 4; opacity: .08;
+  background: radial-gradient(ellipse at 19% 17%, rgba(110, 104, 124, .15), transparent 35%), radial-gradient(ellipse at 82% 72%, rgba(94, 112, 128, .12), transparent 38%);
+  animation: dust-tone-shift 48s ease-in-out infinite alternate;
+}
+.ambient-lightning {
+  z-index: 5; opacity: 0;
+  background: radial-gradient(ellipse at 23% 29%, rgba(186,181,255,.65), rgba(108,133,224,.12) 9%, transparent 21%);
+  animation: cloud-lightning 59s linear infinite;
+}
+.meteor-field { z-index: 6; inset: 0; overflow: clip; }
+.meteor {
+  position: absolute; display: block; width: 160px; height: 2px; opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(182,213,237,.45) 70%, #e7f4ff);
+  border-radius: 100%; transform-origin: right center;
+}
+.meteor::after { content: ''; position: absolute; right: 0; top: -1px; width: 4px; height: 4px; border-radius: 50%; background: #edf9ff; box-shadow: 0 0 8px #b6dcff; }
+.meteor-one { top: 16%; left: 38%; animation: shooting-star 47s linear infinite; }
+.meteor-two { top: 62%; left: 9%; width: 110px; animation: shooting-star 71s 19s linear infinite; }
+
+/* Long density cycle: open Milky Way → cloud banks → open Milky Way. */
+@keyframes open-sky-drift {
+  from { transform: scale(1.02) translate3d(-3%, 1%, 0); }
+  to { transform: scale(1.22) translate3d(4%, -3%, 0); }
+}
+@keyframes open-sky-density { 0%, 100% { opacity: .7; } 32% { opacity: .9; } 63% { opacity: .5; } 83% { opacity: .78; } }
+@keyframes cloud-surge {
+  from { transform: scale(1.02) translate3d(3%, -2%, 0); }
+  to { transform: scale(1.36) translate3d(-5%, 3%, 0); }
+}
+@keyframes cloud-density { 0%, 100% { opacity: .36; } 28%, 38% { opacity: .72; } 57% { opacity: .2; } 76% { opacity: .6; } }
+@keyframes dust-drift {
+  from { transform: scale(1.25) translate3d(-4%, 2%, 0); }
+  to { transform: scale(1.04) translate3d(4%, -2%, 0); }
+}
+@keyframes dust-density { 0%, 100% { opacity: .04; } 20% { opacity: .18; } 34% { opacity: 0; } 63%, 75% { opacity: .22; } 89% { opacity: .08; } }
+@keyframes stars-travel { from { transform: translate3d(-2%, 1%, 0); } to { transform: translate3d(3%, -2%, 0); } }
+@keyframes dust-tone-shift { from { opacity: .035; transform: scale(1.05) translateX(-4%); } to { opacity: .12; transform: scale(1.14) translateX(4%); } }
+@keyframes cloud-lightning {
+  0%, 18%, 19.4%, 100% { opacity: 0; }
+  18.2% { opacity: .64; }
+  18.55% { opacity: .08; }
+  18.85% { opacity: .4; }
+}
+@keyframes shooting-star {
+  0%, 25% { opacity: 0; transform: translate3d(-70px, -35px, 0) rotate(28deg) scaleX(.3); }
+  25.3% { opacity: .8; }
+  27.4% { opacity: 0; transform: translate3d(340px, 180px, 0) rotate(28deg) scaleX(1); }
+  100% { opacity: 0; transform: translate3d(340px, 180px, 0) rotate(28deg) scaleX(1); }
+}
+
+.shell[data-ambience="rustig"] .ambient-far { animation-duration: 72s, 150s; }
+.shell[data-ambience="rustig"] .ambient-near { animation-duration: 58s, 150s; }
+.shell[data-ambience="rustig"] .ambient-dust { animation-duration: 92s, 150s; }
+.shell[data-ambience="rustig"] .ambient-lightning,
+.shell[data-ambience="rustig"] .meteor { animation: none; opacity: 0; }
+.shell[data-ambience="stil"] .ambient, .shell[data-ambience="stil"] .meteor { animation: none; }
+.shell[data-ambience="stil"] .ambient-near, .shell[data-ambience="stil"] .ambient-dust,
+.shell[data-ambience="stil"] .ambient-tint, .shell[data-ambience="stil"] .ambient-lightning,
+.shell[data-ambience="stil"] .meteor { opacity: 0; }
+.shell[data-ambience="stil"] .ambient-scene { transform: none; transition: none; }
+.shell.is-hidden .ambient, .shell.is-hidden .meteor { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-scene { transform: none !important; transition: none !important; }
+  .ambient, .meteor { animation: none !important; }
+  .ambient-near, .ambient-dust, .ambient-tint, .ambient-lightning, .meteor { opacity: 0 !important; }
+}

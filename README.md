@@ -27,7 +27,7 @@ The prototype supports keyboard navigation and the browser Gamepad API:
 
 Keyboard, gamepad and pointer use `src/focus-controller.ts`. Tests import the compiled production controller; they do not duplicate its navigation rules. Native DOM focus is reconciled with the controller, including Tab and pointer changes.
 
-Background animation, the gamepad polling loop and the clock timer pause when the document is hidden. Preferences are optional: unavailable browser storage does not prevent startup. The quiet background mode disables tint/lightning animations; reduced motion also disables confirmation and logo-scale motion.
+Background animation, the gamepad polling loop and the clock timer pause when the document is hidden. The background layers combine a local Milky Way texture with darker moving cloud layers; colour shifts remain muted blue-grey and dusty grey-violet. Preferences are optional: unavailable browser storage does not prevent startup. The quiet background mode disables lightning and shooting stars; reduced motion also disables confirmation and logo-scale motion.
 
 The Android projector adapter, real app launching, and stock-launcher handoff are intentionally not connected yet. The UI includes a safe demo confirmation for “Exit to stock UI” until the projector is validated through ADB.
 

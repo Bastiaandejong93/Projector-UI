@@ -1,4 +1,5 @@
 import './style.css';
+import './ambient.css';
 
 import { createFocusController, createKeyboardInput, type Action, type Effect, type Zone } from './focus-controller';
 type Ambience = 'stil' | 'rustig' | 'atmosferisch';
@@ -26,11 +27,15 @@ const root = document.querySelector<HTMLDivElement>('#app')!;
 
 root.innerHTML = `
   <main class="shell" aria-label="Luna projector home">
-    <div class="ambient ambient-clouds ambient-far" aria-hidden="true"></div>
-    <div class="ambient ambient-clouds ambient-near" aria-hidden="true"></div>
-    <div class="ambient ambient-stars" aria-hidden="true"></div>
-    <div class="ambient ambient-tint" aria-hidden="true"></div>
-    <div class="ambient ambient-lightning" aria-hidden="true"></div>
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient ambient-stars"></div>
+      <div class="ambient ambient-clouds ambient-far"></div>
+      <div class="ambient ambient-clouds ambient-near"></div>
+      <div class="ambient ambient-clouds ambient-dust"></div>
+      <div class="ambient ambient-tint"></div>
+      <div class="ambient ambient-lightning"></div>
+      <div class="ambient meteor-field"><i class="meteor meteor-one"></i><i class="meteor meteor-two"></i></div>
+    </div>
     <div class="ui-zone">
       <header class="topbar">
         <div class="nav-region">
@@ -145,6 +150,8 @@ function renderFocus() {
   navTrigger.classList.toggle('is-active', state.zone === 'nav-trigger');
   systemTrigger.classList.toggle('is-active', state.zone === 'system-trigger');
   navTrigger.tabIndex = systemTrigger.tabIndex = 0;
+  shell.style.setProperty('--scene-x', `${(2.5 - state.appIndex) * 0.55}%`);
+  shell.classList.toggle('has-panel', inSystem);
   updateGlow();
 }
 
@@ -294,6 +301,6 @@ window.addEventListener('pagehide', () => { stopGamepadPolling(); window.clearTi
 window.addEventListener('pageshow', updateVisibility);
 window.addEventListener('resize', updateGlow);
 
-setAmbience(storedAmbience === 'stil' || storedAmbience === 'atmosferisch' ? storedAmbience : 'rustig');
+setAmbience(storedAmbience === 'stil' || storedAmbience === 'rustig' ? storedAmbience : 'atmosferisch');
 updateVisibility();
 syncFocus();
