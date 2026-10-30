@@ -34,6 +34,15 @@ class MainActivity : Activity() {
         if (hasFocus) hideSystemBars()
     }
 
+    override fun onBackPressed() {
+        // Android TV would otherwise finish this Activity. Luna's focus controller owns Back:
+        // it closes drawers and confirmation panels, while Back on the app row deliberately stays put.
+        webView.evaluateJavascript(
+            "document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));",
+            null,
+        )
+    }
+
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     private fun createWebView(): WebView {
         val assetLoader = WebViewAssetLoader.Builder()
