@@ -29,7 +29,7 @@ Keyboard, gamepad and pointer use `src/focus-controller.ts`. Tests import the co
 
 Background animation, the gamepad polling loop and the clock timer pause when the document is hidden. The background layers combine a local Milky Way texture with darker moving cloud layers; colour shifts remain muted blue-grey and dusty grey-violet. Preferences are optional: unavailable browser storage does not prevent startup. The quiet background mode disables lightning and shooting stars; reduced motion also disables confirmation and logo-scale motion.
 
-The Android projector adapter, real app launching, and stock-launcher handoff are intentionally not connected yet. The UI includes a safe demo confirmation for “Exit to stock UI” until the projector is validated through ADB.
+On Android, the browser fallback remains a demo. The test APK exposes a narrow local-only bridge for real app starts, XGIMI HDMI Inputs, Android TV Wi-Fi/Settings, and an explicit return to the verified stock launcher.
 
 ## Checks
 
@@ -40,8 +40,22 @@ npm test
 
 Verified on desktop: production build, nine controller/input regression tests, and browser keyboard routes through both menus, exit cancellation/confirmation and Tab focus. A physical controller and the projector have not been validated in this pass.
 
-## Next: projector integration
+## XGIMI Horizon test app
 
-First identify the actual model, firmware, installed apps and stock-launcher activity through ADB. Keep system changes separate from the browser prototype. The stock-exit route must target the verified original launcher explicitly: a generic HOME intent could return to this app once it becomes the default home.
+The checked projector is an XGIMI Horizon XK03H / `xgimigalileo`, Android TV 11, build `RT.3.24.327`. The Android wrapper lives in `android/` and uses a local WebView bundle; it does not load the home screen from the network.
 
-App launching, stock exit and boot-to-home are still demo-only. Test the return route on hardware before changing the default launcher or disabling any existing packages.
+Build the debug APK without installing Android Studio:
+
+```sh
+bash android/build-docker.sh
+adb -s <projector-ip>:5555 install -r android/app/build/outputs/apk/debug/app-debug.apk
+adb -s <projector-ip>:5555 shell am start -n nl.bastiaandejong.luna/.MainActivity
+```
+
+`nl.bastiaandejong.luna` is only a normal Leanback app in V1. Its `HOME` activity alias is disabled in the manifest, so installing it cannot take over boot or the Home button. Do not enable that alias or choose Luna as default Home until the physical remote acceptance test is complete.
+
+Test with the physical remote: app-row launch and return for every service, Inputs, Wi-Fi, Android TV Settings, ambience cycling, and the confirmed “Exit to stock UI” route. The stock exit always targets `com.google.android.tvlauncher/.MainActivity` explicitly.
+
+## Reversible cleanup
+
+The matching XGIMI profile has been adapted with Prime Video deliberately kept enabled. The exact package policy and full restore procedure are in [docs/xgimi-horizon-recovery.md](docs/xgimi-horizon-recovery.md). Packages are disabled for user 0 only; none are uninstalled.

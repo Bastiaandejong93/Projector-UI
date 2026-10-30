@@ -2,14 +2,21 @@ import './style.css';
 import './ambient.css';
 
 import { createFocusController, createKeyboardInput, type Action, type Effect, type Zone } from './focus-controller';
+import { exitToNativeStockHome, launchNativeApp, openNativeSystem, type LunaAppId } from './luna-host';
 type Ambience = 'stil' | 'rustig' | 'atmosferisch';
 
-const apps = ['Apple TV', 'Netflix', 'Prime Video', 'HBO Max', 'YouTube', 'Disney+'];
-const logoAssets = ['apple-tv-wordmark', 'netflix-wordmark', 'prime-video-wordmark', 'hbo-max-wordmark', 'youtube-wordmark', 'disney-plus-wordmark'];
+const apps: Array<{ id: LunaAppId; label: string; logo: string }> = [
+  { id: 'apple-tv', label: 'Apple TV', logo: 'apple-tv-wordmark' },
+  { id: 'netflix', label: 'Netflix', logo: 'netflix-wordmark' },
+  { id: 'prime-video', label: 'Prime Video', logo: 'prime-video-wordmark' },
+  { id: 'max', label: 'HBO Max', logo: 'hbo-max-wordmark' },
+  { id: 'youtube', label: 'YouTube', logo: 'youtube-wordmark' },
+  { id: 'disney-plus', label: 'Disney+', logo: 'disney-plus-wordmark' },
+];
 const navigationItems = ['Search', 'Home', 'Shop', 'Discover', 'Apps'];
 const systemItems = [
   ['◉', 'Profile'], ['⌂', 'Home'], ['♧', 'Shop'], ['◈', 'Discover'],
-  ['⠿', 'Apps'], ['⇥', 'Inputs'], ['⌁', 'Wi-Fi'], ['⚙', 'Settings'],
+  ['⠿', 'Apps'], ['⇥', 'Inputs'], ['⌁', 'Wi-Fi'], ['◌', 'Atmosphere'], ['⚙', 'Settings'],
 ] as const;
 
 function readPreference(key: string) {
@@ -82,9 +89,9 @@ const confirmNo = document.querySelector<HTMLButtonElement>('.confirm-no')!;
 const glow = document.querySelector<HTMLElement>('.focus-glow')!;
 const toast = document.querySelector<HTMLElement>('.toast')!;
 
-appRow.innerHTML = apps.map((name, index) => `
-  <button class="app-slot" type="button" data-index="${index}" aria-label="${name}">
-    <img class="logo" src="/assets/logos/${logoAssets[index]}.svg" alt="" />
+appRow.innerHTML = apps.map((app, index) => `
+  <button class="app-slot" type="button" data-index="${index}" aria-label="${app.label}">
+    <img class="logo" src="/assets/logos/${app.logo}.svg" alt="" />
   </button>`).join('');
 horizontalNav.innerHTML = navigationItems.map(name => `<button type="button">${name}</button>`).join('');
 systemList.innerHTML = systemItems.map(([icon, label], index) => `
@@ -181,18 +188,22 @@ function applyEffect(effect: Effect | undefined) {
   if (!effect) return;
   if (effect.type === 'app') {
     savePreference('luna:last-app', String(effect.index));
-    announce(`${apps[effect.index]} — demo; openen op de projector volgt`);
+    const app = apps[effect.index];
+    if (!launchNativeApp(app.id)) announce(`${app.label} — openen op de projector volgt`);
   } else if (effect.type === 'stock-exit') {
-    announce('Exit to stock UI — demo; projectoradapter volgt via ADB');
+    if (!exitToNativeStockHome()) announce('Exit to stock UI — projectoradapter volgt via ADB');
   } else {
     const label = effect.type === 'navigation' ? navigationItems[effect.index] : systemItems[effect.index][1];
     if (label === 'Home') controller.focus('apps', state.appIndex);
-    else if (effect.type === 'system' && label === 'Settings') {
+    else if (effect.type === 'system' && label === 'Atmosphere') {
       const modes: Ambience[] = ['stil', 'rustig', 'atmosferisch'];
       const current = (shell.dataset.ambience as Ambience) || 'rustig';
       const next = modes[(modes.indexOf(current) + 1) % modes.length];
       setAmbience(next);
       announce(`Achtergrondstand: ${next}`);
+    } else if (effect.type === 'system' && (label === 'Inputs' || label === 'Wi-Fi' || label === 'Settings')) {
+      const destination = label === 'Wi-Fi' ? 'wifi' : label === 'Inputs' ? 'inputs' : 'settings';
+      if (!openNativeSystem(destination)) announce(`${label} — openen op de projector volgt`);
     } else announce(`${label} — nog niet gekoppeld in het prototype`);
   }
 }
