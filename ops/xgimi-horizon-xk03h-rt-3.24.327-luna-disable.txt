@@ -1,0 +1,40 @@
+# Luna package policy for XGIMI Horizon XK03H / xgimigalileo / Android TV 11 / RT.3.24.327.
+# Source profile: Gathin23/cleanyourtv commit fe9ad3204b945d3aadfb6876ee6ea78c20a1fe73
+# Source: examples/xgimi-horizon-s-pro/debloat.txt
+#
+# This is the source profile with exactly one intentional exception:
+# com.amazon.amazonvideo.livingroom (Prime Video) remains enabled.
+# All entries are disabled for Android user 0 only; none are uninstalled.
+
+# Store demo, factory and test tools
+fusion.android.tv.demo
+com.xgimi.burnin
+com.xgimi.atvwifiverify
+com.xgimi.minitvfactory
+
+# Telemetry, feedback and automatic preload configuration
+com.xgimi.bugreportsender
+com.google.android.feedback
+android.autoinstalls.config.xgimi.xgimigalileo
+
+# Google content and preloads
+com.google.android.tvrecommendations
+com.google.android.play.games
+com.google.android.videos
+com.google.android.marvin.talkback
+com.google.android.youtube.tvmusic
+
+# Unused streaming content
+com.ted.android.tv
+
+# Unused voice, casting and phone remote features
+com.google.android.katniss
+com.google.android.apps.mediashell
+com.google.android.tv.remote.service
+
+# Unused XGIMI extras and stock ambient screensavers
+com.xgimi.filemanager
+com.xgimi.gimiplayer
+com.xgimi.doubanfm
+com.xgimi.atmosphere
+com.google.android.backdrop
