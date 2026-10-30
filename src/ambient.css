@@ -1,10 +1,10 @@
 /* Realistic deep-space scene: movement comes from layered panning and density shifts. */
 .ambient-scene {
   position: absolute; z-index: -2; inset: -3%; pointer-events: none;
-  transform: translate3d(var(--scene-x, 0%), 0, 0) scale(1.025);
+  transform: scale(1.025);
   transition: transform 850ms cubic-bezier(.22,.61,.36,1);
 }
-.has-panel .ambient-scene { transform: translate3d(var(--scene-x, 0%), 0, 0) scale(1.09); }
+.has-panel .ambient-scene { transform: scale(1.09); }
 .ambient { position: absolute; inset: -12%; pointer-events: none; }
 .ambient-clouds { background-position: center; background-size: cover; will-change: transform, opacity; }
 .ambient-far {

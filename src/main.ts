@@ -150,7 +150,6 @@ function renderFocus() {
   navTrigger.classList.toggle('is-active', state.zone === 'nav-trigger');
   systemTrigger.classList.toggle('is-active', state.zone === 'system-trigger');
   navTrigger.tabIndex = systemTrigger.tabIndex = 0;
-  shell.style.setProperty('--scene-x', `${(2.5 - state.appIndex) * 0.55}%`);
   shell.classList.toggle('has-panel', inSystem);
   updateGlow();
 }
