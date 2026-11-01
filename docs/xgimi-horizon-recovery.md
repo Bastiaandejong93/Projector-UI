@@ -32,3 +32,38 @@ TV_HOST=<projector-ip> tools/restore.sh \
 ```
 
 After restore, verify that `pm list packages -d` is empty and that Home resolves to `com.google.android.tvlauncher/.MainActivity`.
+
+## Luna screensaver
+
+## Luna Home rollout and recovery
+
+The approved rollout enables `nl.bastiaandejong.luna/.LunaHome` and sets it as the user-0 default HOME. Luna's “Exit to Stock UI” action explicitly starts `com.google.android.tvlauncher/.MainActivity`, so the stock launcher remains reachable without changing firmware or uninstalling Luna.
+
+To restore stock Home while keeping Luna installed:
+
+```sh
+adb -s <projector-ip>:5555 shell cmd package set-home-activity --user 0 com.google.android.tvlauncher/.MainActivity
+adb -s <projector-ip>:5555 shell am start -n com.google.android.tvlauncher/.MainActivity
+```
+
+To return Luna as Home after a later stock session:
+
+```sh
+adb -s <projector-ip>:5555 shell cmd package set-home-activity --user 0 nl.bastiaandejong.luna/.LunaHome
+adb -s <projector-ip>:5555 shell am start -n nl.bastiaandejong.luna/.MainActivity
+```
+
+These commands change only the default Home preference. The package cleanup remains independent and is restored with the procedure above.
+
+Luna V2.4 includes a normal Android DreamService with the same moving stars and clouds as the Luna background. On 2026-10-30, the selected screensaver changed from the standard Colors component to:
+
+```text
+nl.bastiaandejong.luna/.LunaDreamService
+```
+
+This did not enable XGIMI Atmosphere or Google Backdrop, and did not change the Home or boot launcher. Restore the previous Colors screensaver with:
+
+```sh
+adb -s 192.168.178.174:5555 shell settings put secure screensaver_components \
+  com.android.dreams.basic/com.android.dreams.basic.Colors
+```

@@ -27,10 +27,11 @@ com.google.android.youtube.tvmusic
 # Unused streaming content
 com.ted.android.tv
 
-# Unused voice, casting and phone remote features
+# Unused voice and casting features
+# Keep the Android TV Remote Service enabled: it provides the paired iPhone
+# remote, including native keyboard text input in supported TV apps.
 com.google.android.katniss
 com.google.android.apps.mediashell
-com.google.android.tv.remote.service
 
 # Unused XGIMI extras and stock ambient screensavers
 com.xgimi.filemanager

@@ -11,8 +11,8 @@ android {
         applicationId = "nl.bastiaandejong.luna"
         minSdk = 30
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 8
+        versionName = "0.2.6"
     }
 
     compileOptions {

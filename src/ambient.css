@@ -1,114 +1,145 @@
-/* Realistic deep-space scene: movement comes from layered panning and density shifts. */
+/*
+ * Projector-light living sky.
+ *
+ * Never more than one large bitmap is visible or animated. The foreground
+ * tint is a static CSS gradient; a rare meteor is a tiny 150px element. This
+ * intentionally replaces the old stack of panned images, filters and blends.
+ */
 .ambient-scene {
-  position: absolute; z-index: -2; inset: -3%; pointer-events: none;
-  transform: scale(1.025);
-  transition: transform 850ms cubic-bezier(.22,.61,.36,1);
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #080b14;
 }
-.has-panel .ambient-scene { transform: scale(1.09); }
-.ambient { position: absolute; inset: -12%; pointer-events: none; }
-.ambient-clouds { background-position: center; background-size: cover; will-change: transform, opacity; }
-.ambient-far {
-  z-index: 1; opacity: .66;
-  background-image: linear-gradient(rgba(4, 10, 17, .22), rgba(4, 10, 17, .22)), url('/assets/backgrounds/luna-milky-way-v1.png');
-  animation: open-sky-drift 40s ease-in-out infinite alternate, open-sky-density 105s ease-in-out infinite;
+.ambient-scene .ambient { position: absolute; pointer-events: none; }
+.ambient-canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.ambient-scene .ambient-far {
+  display: block !important;
+  z-index: 0;
+  inset: -8%;
+  opacity: .92;
+  background: #080b14 url('/assets/backgrounds/luna-cloudscape-v1.png') center / cover no-repeat;
+  transform: translate3d(-1.8%, .9%, 0) scale(1.06);
+  will-change: transform;
+  animation: luna-sky-drift 52s ease-in-out infinite alternate;
 }
-.ambient-near {
-  z-index: 2; opacity: .42;
-  background-image: linear-gradient(rgba(13, 23, 35, .48), rgba(13, 23, 35, .48)), url('/assets/backgrounds/luna-cloudscape-v3.png');
-  background-blend-mode: color;
-  animation: cloud-surge 29s ease-in-out infinite alternate, cloud-density 105s ease-in-out infinite;
-}
-.ambient-dust {
-  z-index: 3; opacity: .08;
-  background-image: linear-gradient(135deg, rgba(67, 73, 92, .28), rgba(91, 79, 97, .18)), url('/assets/backgrounds/luna-cloudscape-v2.png');
-  background-position: 65% 40%; background-blend-mode: color;
-  animation: dust-drift 52s ease-in-out infinite alternate, dust-density 105s ease-in-out infinite;
-}
-.ambient-stars {
-  z-index: 0; opacity: .65;
-  background-image: radial-gradient(circle at 11% 28%, #b3cadb 0 1px, transparent 1.4px), radial-gradient(circle at 41% 12%, #b6a5cd 0 .8px, transparent 1.3px), radial-gradient(circle at 73% 30%, #b5cfde 0 1px, transparent 1.4px), radial-gradient(circle at 86% 61%, #d2bf9e 0 .8px, transparent 1.3px);
-  background-size: 270px 245px, 330px 290px, 420px 360px, 570px 430px;
-  animation: stars-travel 70s linear infinite alternate;
-}
-.ambient-tint {
-  z-index: 4; opacity: .08;
-  background: radial-gradient(ellipse at 19% 17%, rgba(110, 104, 124, .15), transparent 35%), radial-gradient(ellipse at 82% 72%, rgba(94, 112, 128, .12), transparent 38%);
-  animation: dust-tone-shift 48s ease-in-out infinite alternate;
-}
-.ambient-lightning {
-  z-index: 5; opacity: 0;
-  background: radial-gradient(ellipse at 23% 29%, rgba(186,181,255,.52), rgba(108,133,224,.10) 9%, transparent 21%);
-  animation: cloud-lightning 143s linear infinite;
-}
-.ambient-lightning::before, .ambient-lightning::after {
-  position: absolute; content: ''; display: block; background: rgba(224,235,255,.78);
-  filter: drop-shadow(0 0 7px rgba(167,192,255,.62));
-}
-.ambient-lightning::before {
-  top: 7%; left: 21.5%; width: 4.5%; height: 31%;
-  clip-path: polygon(45% 0, 72% 0, 53% 34%, 83% 34%, 23% 100%, 41% 52%, 14% 52%);
-}
-.ambient-lightning::after {
-  top: 25%; left: 24.5%; width: 5%; height: 19%; opacity: .7;
-  clip-path: polygon(0 0, 23% 0, 49% 40%, 100% 54%, 48% 61%, 35% 100%, 27% 61%, 13% 45%);
-}
-.meteor-field { z-index: 6; inset: 0; overflow: clip; }
-.meteor {
-  position: absolute; display: block; width: 160px; height: 2px; opacity: 0;
-  background: linear-gradient(90deg, transparent, rgba(182,213,237,.45) 70%, #e7f4ff);
-  border-radius: 100%; transform-origin: right center;
-}
-.meteor::after { content: ''; position: absolute; right: 0; top: -1px; width: 4px; height: 4px; border-radius: 50%; background: #edf9ff; box-shadow: 0 0 8px #b6dcff; }
-.meteor-one { top: 16%; left: 38%; animation: shooting-star 128s -18s linear infinite; }
-.meteor-two { top: 62%; left: 9%; width: 110px; animation: shooting-star 197s 40s linear infinite; }
-
-/* Long density cycle: open Milky Way → cloud banks → open Milky Way. */
-@keyframes open-sky-drift {
-  from { transform: scale(1.02) translate3d(-3%, 1%, 0); }
-  to { transform: scale(1.22) translate3d(4%, -3%, 0); }
-}
-@keyframes open-sky-density { 0%, 100% { opacity: .7; } 32% { opacity: .9; } 63% { opacity: .5; } 83% { opacity: .78; } }
-@keyframes cloud-surge {
-  from { transform: scale(1.02) translate3d(3%, -2%, 0); }
-  to { transform: scale(1.36) translate3d(-5%, 3%, 0); }
-}
-@keyframes cloud-density { 0%, 100% { opacity: .36; } 28%, 38% { opacity: .72; } 57% { opacity: .2; } 76% { opacity: .6; } }
-@keyframes dust-drift {
-  from { transform: scale(1.25) translate3d(-4%, 2%, 0); }
-  to { transform: scale(1.04) translate3d(4%, -2%, 0); }
-}
-@keyframes dust-density { 0%, 100% { opacity: .04; } 20% { opacity: .18; } 34% { opacity: 0; } 63%, 75% { opacity: .22; } 89% { opacity: .08; } }
-@keyframes stars-travel { from { transform: translate3d(-2%, 1%, 0); } to { transform: translate3d(3%, -2%, 0); } }
-@keyframes dust-tone-shift { from { opacity: .035; transform: scale(1.05) translateX(-4%); } to { opacity: .12; transform: scale(1.14) translateX(4%); } }
-@keyframes cloud-lightning {
-  0%, 47%, 48.7%, 100% { opacity: 0; }
-  47.15% { opacity: .26; }
-  47.28% { opacity: .72; }
-  47.46% { opacity: .07; }
-  47.72% { opacity: .46; }
-  48.02% { opacity: .12; }
-}
-@keyframes shooting-star {
-  0%, 25% { opacity: 0; transform: translate3d(-70px, -35px, 0) rotate(28deg) scaleX(.3); }
-  25.3% { opacity: .8; }
-  27.4% { opacity: 0; transform: translate3d(340px, 180px, 0) rotate(28deg) scaleX(1); }
-  100% { opacity: 0; transform: translate3d(340px, 180px, 0) rotate(28deg) scaleX(1); }
+/* A single static tint gives each weather state its aurora/dusk character. */
+.ambient-scene::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  opacity: .14;
+  background: radial-gradient(ellipse at 18% 23%, rgba(145, 101, 179, .18), transparent 42%), radial-gradient(ellipse at 82% 70%, rgba(190, 113, 77, .13), transparent 44%);
 }
 
-.shell[data-ambience="rustig"] .ambient-far { animation-duration: 72s, 150s; }
-.shell[data-ambience="rustig"] .ambient-near { animation-duration: 58s, 150s; }
-.shell[data-ambience="rustig"] .ambient-dust { animation-duration: 92s, 150s; }
-.shell[data-ambience="rustig"] .ambient-lightning,
-.shell[data-ambience="rustig"] .meteor { animation: none; opacity: 0; }
-.shell[data-ambience="stil"] .ambient, .shell[data-ambience="stil"] .meteor { animation: none; }
-.shell[data-ambience="stil"] .ambient-near, .shell[data-ambience="stil"] .ambient-dust,
-.shell[data-ambience="stil"] .ambient-tint, .shell[data-ambience="stil"] .ambient-lightning,
-.shell[data-ambience="stil"] .meteor { opacity: 0; }
-.shell[data-ambience="stil"] .ambient-scene { transform: none; transition: none; }
-.shell.is-hidden .ambient, .shell.is-hidden .meteor { animation-play-state: paused; }
+/* Keep the source assets in the same visual register on a bright projector. */
+.ambient-scene::before {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 9, 17, .10), rgba(4, 7, 14, .24));
+}
+
+/* All historical heavyweight layers remain fully inert. */
+.ambient-scene .ambient:not(.ambient-far):not(.ambient-satellite),
+.ambient-scene .meteor-field { display: none !important; }
+
+/* A meteor is opt-in and brief: no glow/filter, no repeating field. */
+.safe-meteor .ambient-scene .meteor-field {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: block !important;
+  overflow: hidden;
+}
+.safe-meteor .ambient-scene .meteor-one {
+  position: absolute;
+  top: 18%;
+  left: 30%;
+  display: block;
+  width: 155px;
+  height: 2px;
+  opacity: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, rgba(191, 223, 236, .44) 72%, #f1f8ff);
+  transform-origin: right center;
+  animation: luna-single-meteor 3.6s linear both;
+}
+.safe-meteor .ambient-scene .meteor-two,
+.safe-meteor .ambient-scene .meteor-shower { display: none !important; }
+
+/* The satellite is a tiny element, not another full-screen image layer. */
+.safe-satellite .ambient-scene .ambient-satellite {
+  position: absolute;
+  z-index: 3;
+  top: 24%;
+  left: 9%;
+  display: block !important;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  opacity: 0;
+  background: #e7f3f2;
+  animation: luna-small-satellite 13s linear both;
+}
+
+/* A single dim firefly gives the long quiet phases a little life. */
+.safe-firefly .ambient-scene .ambient-firefly {
+  position: absolute;
+  z-index: 3;
+  top: 62%;
+  left: 68%;
+  display: block !important;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0;
+  background: rgba(226, 239, 211, .82);
+  box-shadow: 0 0 10px rgba(207, 233, 187, .38);
+  animation: luna-firefly 11s ease-in-out both;
+}
+
+.is-dream .ui-zone { display: none; }
+.is-dream .ambient-scene .ambient-far { animation-duration: 74s; }
+.is-dream .ambient-scene::after {
+  inset: -12%;
+  will-change: transform;
+  animation: luna-aurora-drift 92s ease-in-out infinite alternate;
+}
+
+@keyframes luna-sky-drift {
+  to { transform: translate3d(5.5%, -3.2%, 0) scale(1.15); }
+}
+@keyframes luna-phase-breathe {
+  0%, 100% { opacity: .16; }
+  50% { opacity: .29; }
+}
+@keyframes luna-firefly {
+  0%, 16% { opacity: 0; transform: translate3d(0, 0, 0) scale(.55); }
+  34%, 68% { opacity: .52; transform: translate3d(3vw, -1.5vh, 0) scale(1); }
+  86%, 100% { opacity: 0; transform: translate3d(5vw, -3vh, 0) scale(.7); }
+}
+@keyframes luna-single-meteor {
+  0%, 10% { opacity: 0; transform: translate3d(-60px, -35px, 0) rotate(28deg) scaleX(.3); }
+  18% { opacity: .82; }
+  86%, 100% { opacity: 0; transform: translate3d(350px, 180px, 0) rotate(28deg) scaleX(1); }
+}
+@keyframes luna-small-satellite {
+  0%, 8% { opacity: 0; transform: translate3d(0, 0, 0); }
+  16%, 76% { opacity: .72; }
+  100% { opacity: 0; transform: translate3d(110vw, -20vh, 0); }
+}
+@keyframes luna-aurora-drift {
+  to { transform: translate3d(1.5%, -1%, 0) scale(1.03); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .ambient-scene { transform: none !important; transition: none !important; }
-  .ambient, .meteor { animation: none !important; }
-  .ambient-near, .ambient-dust, .ambient-tint, .ambient-lightning, .meteor { opacity: 0 !important; }
+  .ambient-scene .ambient-far, .ambient-transition, .ambient-scene::after, .safe-meteor .ambient-scene .meteor-one, .safe-satellite .ambient-satellite, .safe-firefly .ambient-firefly { animation: none !important; }
+  .ambient-scene .meteor-field { display: none !important; }
 }
