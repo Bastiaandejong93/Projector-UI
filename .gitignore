@@ -6,3 +6,5 @@ android/app/build/
 android/local.properties
 .DS_Store
 *.log
+work/
+outputs/

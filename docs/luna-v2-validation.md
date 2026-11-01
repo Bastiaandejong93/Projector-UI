@@ -17,7 +17,7 @@ Version `0.2.6`, Android version code `8`.
 ## Build validation
 
 - `npm run build`: passed.
-- `npm test`: 16 tests passed.
+- `npm test`: 17 tests passed.
 - `git diff --check`: passed.
 - `bash android/build-docker.sh`: passed before installation.
 
