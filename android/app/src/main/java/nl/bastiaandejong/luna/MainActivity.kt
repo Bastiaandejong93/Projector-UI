@@ -35,9 +35,9 @@ class MainActivity : Activity() {
     companion object {
         // A short physical press should always move exactly once. Repeats only begin
         // after a deliberate hold and stay calm enough for a projector remote.
-        private const val DPAD_INITIAL_REPEAT_DELAY_MS = 650L
-        private const val DPAD_REPEAT_INTERVAL_MS = 220L
-        private const val DPAD_BOUNCE_INTERVAL_MS = 400L
+        private const val DPAD_INITIAL_REPEAT_DELAY_MS = 360L
+        private const val DPAD_REPEAT_INTERVAL_MS = 90L
+        private const val DPAD_BOUNCE_INTERVAL_MS = 180L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +79,17 @@ class MainActivity : Activity() {
 
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode == KeyEvent.KEYCODE_HOME) {
+            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                webView.evaluateJavascript(
+                    "window.dispatchEvent(new Event('luna:home-button'));",
+                    null,
+                )
+            }
+            // Keep the remote Home press inside Luna whenever Android delivers
+            // it to this launcher activity instead of routing it to stock Home.
+            return true
+        }
         val arrowKey = when (event.keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> "ArrowLeft"
             KeyEvent.KEYCODE_DPAD_RIGHT -> "ArrowRight"
@@ -239,13 +250,10 @@ class MainActivity : Activity() {
                 "settings" -> Intent(Settings.ACTION_SETTINGS)
                 "spotify-notifications" -> Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
                 "screensaver" -> Intent(Settings.ACTION_DREAM_SETTINGS)
-                "atmosphere" -> Intent("com.xgimi.atmosphere.action.MAIN_UI")
-                    .setComponent(ComponentName("com.xgimi.atmosphere", "com.xgimi.atmosphere.view.ScreensaverActivity"))
                 else -> null
             }
             when {
                 intent == null -> false
-                destination == "atmosphere" && intent.resolveActivity(packageManager) == null -> false
                 else -> start(intent, "Deze systeemfunctie is niet beschikbaar")
             }
         }

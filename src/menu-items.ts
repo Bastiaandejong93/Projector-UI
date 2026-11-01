@@ -5,7 +5,6 @@ export const systemItems = [
   { icon: 'apps', label: 'All Apps', destination: 'all-apps' },
   { icon: 'spotify', label: 'Spotify Controls', destination: 'spotify-notifications' },
   { icon: 'dream', label: 'Luna Screensaver', destination: 'screensaver' },
-  { icon: 'atmosphere', label: 'Atmosphere', destination: 'atmosphere' },
 ] as const;
 
 const paths = {
@@ -15,7 +14,6 @@ const paths = {
   apps: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   spotify: '<circle cx="12" cy="12" r="9"/><path d="M7.5 10c3-1 6.1-.7 8.5.6M8.2 13c2.3-.7 4.7-.4 6.6.6M9 15.7c1.5-.4 3.1-.2 4.4.4"/>',
   dream: '<path d="M20.5 14a8.5 8.5 0 0 1-10.5-10.5A8.5 8.5 0 1 0 20.5 14Z"/><path d="M18 3v4m-2-2h4"/>',
-  atmosphere: '<path d="M20.5 14a8.5 8.5 0 0 1-10.5-10.5A8.5 8.5 0 1 0 20.5 14Z"/><path d="M18 3v4m-2-2h4"/>',
   exit: '<path d="M9 4H4v16h5m5-12 4 4-4 4M8 12h12"/>',
 } as const;
 

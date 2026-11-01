@@ -48,7 +48,9 @@ export function createFocusController(initialAppCount: number, initialAllAppsCou
 
     if (state.zone === 'spotify') {
       if (action === 'left') state.spotifyIndex = clamp(state.spotifyIndex - 1, spotifyCount - 1);
-      if (action === 'right') state.spotifyIndex = clamp(state.spotifyIndex + 1, spotifyCount - 1);
+      // The close button is intentionally not part of the horizontal rail;
+      // it is reached only with Up. Right on Next is therefore a no-op.
+      if (action === 'right') state.spotifyIndex = clamp(state.spotifyIndex + 1, Math.max(0, spotifyCount - 2));
       if (action === 'up' || action === 'back') state.zone = 'apps';
       if (action === 'ok') return { type: 'spotify', index: state.spotifyIndex };
       return;

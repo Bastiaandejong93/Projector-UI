@@ -1,9 +1,7 @@
 /*
- * Projector-light living sky.
- *
- * Never more than one large bitmap is visible or animated. The foreground
- * tint is a static CSS gradient; a rare meteor is a tiny 150px element. This
- * intentionally replaces the old stack of panned images, filters and blends.
+ * Deliberately bounded sky: one 2D canvas, <=24 fps, <=960x540 pixels,
+ * at most two image draws, one scene feature and one tiny micro-event.
+ * No CSS particle animation, full-screen filter, video or shader pipeline.
  */
 .ambient-scene {
   position: absolute;
@@ -11,31 +9,21 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #080b14;
-}
-.ambient-scene .ambient { position: absolute; pointer-events: none; }
-.ambient-canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
-.ambient-scene .ambient-far {
-  display: block !important;
-  z-index: 0;
-  inset: -8%;
-  opacity: .92;
+  /* Static fallback also serves reduced motion without a running canvas. */
   background: #080b14 url('/assets/backgrounds/luna-cloudscape-v1.png') center / cover no-repeat;
-  transform: translate3d(-1.8%, .9%, 0) scale(1.06);
-  will-change: transform;
-  animation: luna-sky-drift 52s ease-in-out infinite alternate;
 }
-/* A single static tint gives each weather state its aurora/dusk character. */
-.ambient-scene::after {
+.ambient-canvas {
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   inset: 0;
-  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Never expose the browser's default clear colour during a resize or
+     compositor handoff; the scene itself remains a single canvas. */
+  background: #080b14;
   pointer-events: none;
-  opacity: .14;
-  background: radial-gradient(ellipse at 18% 23%, rgba(145, 101, 179, .18), transparent 42%), radial-gradient(ellipse at 82% 70%, rgba(190, 113, 77, .13), transparent 44%);
 }
-
 /* Keep the source assets in the same visual register on a bright projector. */
 .ambient-scene::before {
   position: absolute;
@@ -45,101 +33,11 @@
   pointer-events: none;
   background: linear-gradient(180deg, rgba(5, 9, 17, .10), rgba(4, 7, 14, .24));
 }
-
-/* All historical heavyweight layers remain fully inert. */
-.ambient-scene .ambient:not(.ambient-far):not(.ambient-satellite),
+/* Historical DOM layers are inert; every catalogue item is drawn on canvas. */
+.ambient-scene .ambient,
 .ambient-scene .meteor-field { display: none !important; }
-
-/* A meteor is opt-in and brief: no glow/filter, no repeating field. */
-.safe-meteor .ambient-scene .meteor-field {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  display: block !important;
-  overflow: hidden;
-}
-.safe-meteor .ambient-scene .meteor-one {
-  position: absolute;
-  top: 18%;
-  left: 30%;
-  display: block;
-  width: 155px;
-  height: 2px;
-  opacity: 0;
-  border-radius: 99px;
-  background: linear-gradient(90deg, transparent, rgba(191, 223, 236, .44) 72%, #f1f8ff);
-  transform-origin: right center;
-  animation: luna-single-meteor 3.6s linear both;
-}
-.safe-meteor .ambient-scene .meteor-two,
-.safe-meteor .ambient-scene .meteor-shower { display: none !important; }
-
-/* The satellite is a tiny element, not another full-screen image layer. */
-.safe-satellite .ambient-scene .ambient-satellite {
-  position: absolute;
-  z-index: 3;
-  top: 24%;
-  left: 9%;
-  display: block !important;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  opacity: 0;
-  background: #e7f3f2;
-  animation: luna-small-satellite 13s linear both;
-}
-
-/* A single dim firefly gives the long quiet phases a little life. */
-.safe-firefly .ambient-scene .ambient-firefly {
-  position: absolute;
-  z-index: 3;
-  top: 62%;
-  left: 68%;
-  display: block !important;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  opacity: 0;
-  background: rgba(226, 239, 211, .82);
-  box-shadow: 0 0 10px rgba(207, 233, 187, .38);
-  animation: luna-firefly 11s ease-in-out both;
-}
-
 .is-dream .ui-zone { display: none; }
-.is-dream .ambient-scene .ambient-far { animation-duration: 74s; }
-.is-dream .ambient-scene::after {
-  inset: -12%;
-  will-change: transform;
-  animation: luna-aurora-drift 92s ease-in-out infinite alternate;
-}
-
-@keyframes luna-sky-drift {
-  to { transform: translate3d(5.5%, -3.2%, 0) scale(1.15); }
-}
-@keyframes luna-phase-breathe {
-  0%, 100% { opacity: .16; }
-  50% { opacity: .29; }
-}
-@keyframes luna-firefly {
-  0%, 16% { opacity: 0; transform: translate3d(0, 0, 0) scale(.55); }
-  34%, 68% { opacity: .52; transform: translate3d(3vw, -1.5vh, 0) scale(1); }
-  86%, 100% { opacity: 0; transform: translate3d(5vw, -3vh, 0) scale(.7); }
-}
-@keyframes luna-single-meteor {
-  0%, 10% { opacity: 0; transform: translate3d(-60px, -35px, 0) rotate(28deg) scaleX(.3); }
-  18% { opacity: .82; }
-  86%, 100% { opacity: 0; transform: translate3d(350px, 180px, 0) rotate(28deg) scaleX(1); }
-}
-@keyframes luna-small-satellite {
-  0%, 8% { opacity: 0; transform: translate3d(0, 0, 0); }
-  16%, 76% { opacity: .72; }
-  100% { opacity: 0; transform: translate3d(110vw, -20vh, 0); }
-}
-@keyframes luna-aurora-drift {
-  to { transform: translate3d(1.5%, -1%, 0) scale(1.03); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .ambient-scene .ambient-far, .ambient-transition, .ambient-scene::after, .safe-meteor .ambient-scene .meteor-one, .safe-satellite .ambient-satellite, .safe-firefly .ambient-firefly { animation: none !important; }
-  .ambient-scene .meteor-field { display: none !important; }
+  .ambient-canvas { display: none; }
+  .ambient-transition { animation: none !important; }
 }

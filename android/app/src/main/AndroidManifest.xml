@@ -24,6 +24,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <!-- Android only binds this after the owner enables Luna under
@@ -49,13 +54,13 @@
             </intent-filter>
         </service>
 
-        <!-- Kept disabled for regular test builds; stock Home remains the launcher. -->
+        <!-- Luna is the defaultable Home surface; Exit to Stock UI is the explicit escape route. -->
         <activity-alias
             android:name=".LunaHome"
-            android:enabled="false"
+            android:enabled="true"
             android:exported="true"
             android:targetActivity=".MainActivity">
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -1,5 +1,5 @@
 export type LunaAppId = 'apple-tv' | 'netflix' | 'prime-video' | 'max' | 'youtube' | 'disney-plus' | 'bilibili' | 'jellyfin' | 'ufc' | 'spotify' | 'vlc';
-export type LunaSystemDestination = 'inputs' | 'wifi' | 'settings' | 'atmosphere' | 'spotify-notifications' | 'screensaver';
+export type LunaSystemDestination = 'inputs' | 'wifi' | 'settings' | 'spotify-notifications' | 'screensaver';
 
 export interface LunaLaunchableApp {
   label: string;
