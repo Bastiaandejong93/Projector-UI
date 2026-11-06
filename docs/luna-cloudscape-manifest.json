@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-04",
+  "generation": {
+    "tool": "built-in image_gen",
+    "promptMode": "generate"
+  },
+  "constraints": {
+    "dimensions": {
+      "width": 1920,
+      "height": 1080
+    },
+    "aspectRatio": "16:9",
+    "maxBytes": 3000000,
+    "format": "PNG",
+    "protectedApprovedOriginals": [
+      "public/assets/backgrounds/luna-cloudscape-v1.png",
+      "public/assets/backgrounds/luna-cloudscape-v2.png",
+      "public/assets/backgrounds/luna-cloudscape-v3.png",
+      "public/assets/backgrounds/luna-cloudscape-v5.png",
+      "public/assets/backgrounds/luna-milky-way-v1.png"
+    ]
+  },
+  "approvedReferences": [
+    "public/assets/backgrounds/luna-cloudscape-v1.png",
+    "public/assets/backgrounds/luna-cloudscape-v2.png",
+    "public/assets/backgrounds/luna-cloudscape-v3.png",
+    "public/assets/backgrounds/luna-cloudscape-v5.png",
+    "public/assets/backgrounds/luna-milky-way-v1.png"
+  ],
+  "assets": [
+    {
+      "file": "public/assets/backgrounds/luna-cloudscape-v7-violet.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2257119,
+      "sha256": "3e0d12732cd9ec5a55e47123c816a588c689749f3b4fa153fe7c0b8a6facb0fd",
+      "source": "image_gen candidate 1",
+      "references": [
+        "luna-cloudscape-v1.png",
+        "luna-cloudscape-v2.png",
+        "luna-cloudscape-v3.png"
+      ],
+      "visualQa": "PASS \u2014 dense natural cloud masses frame upper-left and lower-right; cool navy/steel palette with restrained violet; dark central breathing room; no text, UI, borders, seams, logos, stars, or baked motion visible."
+    },
+    {
+      "file": "public/assets/backgrounds/luna-cloudscape-v8-amber.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2340377,
+      "sha256": "9dcde9f611379babe7b8edc8b7f379b70af161f4b7d0aaac92cc43607b7e6b9e",
+      "source": "image_gen candidate 2",
+      "references": [
+        "luna-cloudscape-v1.png",
+        "luna-cloudscape-v2.png",
+        "luna-cloudscape-v3.png"
+      ],
+      "visualQa": "PASS \u2014 dense organic cloud banks with a restrained ember-amber internal glow; balanced slate-blue shadows; central-right corridor remains dark; no text, UI, borders, seams, logos, stars, or baked motion visible."
+    },
+    {
+      "file": "public/assets/backgrounds/luna-cloudscape-v9-green.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2281820,
+      "sha256": "13bc9988a400c1f7f5678ee37950a28e97e5bb542d038aed8bd226a8630de114",
+      "source": "image_gen candidate 3",
+      "references": [
+        "luna-cloudscape-v2.png",
+        "luna-cloudscape-v3.png",
+        "luna-cloudscape-v5.png"
+      ],
+      "visualQa": "PASS \u2014 layered volumetric masses along edges and lower third; subtle green-gray atmospheric pocket with cool blue-gray silver lining; calm textured center; no text, UI, borders, seams, logos, stars, or baked motion visible."
+    }
+  ]
+}

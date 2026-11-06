@@ -1,15 +1,17 @@
 {
   "name": "luna-projector-home",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.4.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "test": "node --test tests/focus-controller.test.mjs"
+    "build": "tsc && vite build && node tools/exclude-legacy-cloudscapes.mjs",
+    "vision:dry-run": "node tools/vision-ab-test.mjs --dry-run",
+    "vision": "node tools/vision-ab-test.mjs",
+    "test": "tsc src/star-field.ts src/cloud-clearing.ts src/focus-controller.ts src/launch-mode.ts src/menu-items.ts src/dream-sky.ts src/background-cloud-pass.ts src/cloud-texture.ts src/cloud-asset-cleanup.ts src/cloud-bank-trajectory.ts src/cloud-variant.ts src/hybrid-climate.ts src/hybrid-wind.ts src/hybrid-micro-event.ts src/hybrid-milky-trial.ts src/sky-micro-trial.ts src/living-sky-schedule.ts src/sky-weather.ts src/sky-composition.ts src/transition-veil.ts src/transition-pass.ts --outDir .test-build --target ES2020 --module ES2020 --strict && node --test tests/*.test.mjs"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
+    "typescript": "5.6.3",
     "vite": "^6.0.5"
   }
 }

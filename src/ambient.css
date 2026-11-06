@@ -1,0 +1,34 @@
+/*
+ * Deliberately bounded sky: one 2D canvas, fixed 30 fps, <=960x540 pixels,
+ * an adaptive 320x180/256x144 cloud raster and at most two micro-events.
+ * No CSS particle animation, full-screen filter, video or shader pipeline.
+ */
+.ambient-scene {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Static fallback also serves reduced motion without a running canvas. */
+  background: #080b14 url('/assets/backgrounds/luna-hybrid-start.png') center / cover no-repeat;
+}
+.ambient-canvas {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Never expose the browser's default clear colour during a resize or
+     compositor handoff; the scene itself remains a single canvas. */
+  background: #080b14;
+  pointer-events: none;
+}
+/* Historical DOM layers are inert; every catalogue item is drawn on canvas. */
+.ambient-scene .ambient,
+.ambient-scene .meteor-field { display: none !important; }
+.is-dream .ui-zone { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ambient-canvas { display: none; }
+  .ambient-transition { animation: none !important; }
+}
